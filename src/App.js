@@ -36,6 +36,20 @@ function App() {
     }
   }
 
+  async function decrementCounter(){
+    if (typeof window.ethereum !== "undefined") {
+      await requestAccount();
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(counterAdress, Counter.abi, signer);
+      const transaction = await contract.decrementCounter();
+      await transaction.wait();
+      getCount()
+    }
+  }
+
   async function incrementCount(){
     if (typeof window.ethereum !== "undefined") {
       await requestAccount();
@@ -53,7 +67,7 @@ function App() {
     <div className="App">
       <h1>Count : {count} </h1>
       <button onClick={incrementCount}>+</button>
-      <button>-</button>
+      <button onClick={decrementCounter}>-</button>
     </div>
   );
 }
